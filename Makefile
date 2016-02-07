@@ -1,7 +1,7 @@
 # Set up basic variables:
 
 CC = g++
-CFLAGS = -c -Wall -DSLOGGING -std=c++11
+CFLAGS = -c -Wall -DSLOGGING -std=c++11 -g
 LDFLAGS =
 
 CFLAGS += $(shell pkg-config --cflags libpng sdl)
