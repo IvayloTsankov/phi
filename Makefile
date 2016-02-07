@@ -15,7 +15,7 @@ ifeq ($1, "debug")
 endif
 
 #  # List of sources:
-SOURCES = src/main.cpp src/pngwrapper.cpp src/sdl.cpp
+SOURCES = src/main.cpp src/pngwrapper.cpp src/sdl.cpp src/utils.cpp src/image.cpp
 OBJECTS = $(SOURCES:.cpp=.o)
 
 EXECUTABLE = phi

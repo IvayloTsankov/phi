@@ -1,13 +1,9 @@
 #include "pngwrapper.h"
+#include "utils.h"
 #include <cstdlib>
 #include <cstdio>
 #include <png.h>
 
-
-static uint32_t* alloc_image(int width, int height)
-{
-    return new uint32_t[width * height];
-}
 
 uint32_t* png_read(const std::string& filename, int& width,
                    int& height, char& bit_depth, int& error)
