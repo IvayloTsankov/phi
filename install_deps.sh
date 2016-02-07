@@ -26,3 +26,7 @@ then
     echo "Installing pkg-config..."
     sudo apt-get install -y pkg-config
 fi
+
+
+# create folder for images
+mkdir -p images
