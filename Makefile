@@ -4,10 +4,10 @@ CC = g++
 CFLAGS = -c -Wall -DSLOGGING -std=c++11
 LDFLAGS =
 
-CFLAGS += $(shell pkg-config --cflags libpng)
+CFLAGS += $(shell pkg-config --cflags libpng sdl)
 CFLAGS += -Ithird_party/
 
-LDFLAGS += $(shell pkg-config --libs libpng)
+LDFLAGS += $(shell pkg-config --libs libpng sdl)
 
 # check for debug
 ifeq ($1, "debug")
@@ -15,7 +15,7 @@ ifeq ($1, "debug")
 endif
 
 #  # List of sources:
-SOURCES = src/main.cpp src/pngwrapper.cpp
+SOURCES = src/main.cpp src/pngwrapper.cpp src/sdl.cpp
 OBJECTS = $(SOURCES:.cpp=.o)
 
 EXECUTABLE = phi
