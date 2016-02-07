@@ -5,6 +5,43 @@
 #include <png.h>
 
 
+// #include "png++/image.hpp"
+// uint32_t* png_read(const std::string& filename, int& width,
+//                    int& height, char& bit_depth, int& error)
+// {
+//     png::image<png::rgb_pixel> png_image;
+//     try
+//     {
+//         png_image.read(filename); 
+//     }
+//     catch (std::exception& e)
+//     {
+//         error = -1;
+//         return NULL;
+//     }
+// 
+//     height = png_image.get_height();
+//     width = png_image.get_width();
+// 
+//     uint32_t* image = alloc_image(width, height);
+//     for(int y = 0; y < height; ++y)
+//     {
+//         for(int x = 0; x < width; ++x)
+//         {
+//             png::rgb_pixel = png_image[y][x];
+//             uint32_t color = 0;
+//             color |= rgb_pixel.red << 24;
+//             color |= rgb_pixel.red << 16;
+//             color |= rgb_pixel.red << 8;
+// 
+//             image[y * width + x] = color;
+//         }
+//     }
+// 
+//     return image;
+// }
+
+
 uint32_t* png_read(const std::string& filename, int& width,
                    int& height, char& bit_depth, int& error)
 {
@@ -100,9 +137,9 @@ uint32_t* png_read(const std::string& filename, int& width,
             png_bytep px = &(row[x * 4]);
             uint32_t color = 0;
             color |= uint32_t(px[0]) << 24;
-            color |= uint32_t(px[0]) << 16;
-            color |= uint32_t(px[0]) << 8;
-            color |= uint32_t(px[0]);
+            color |= uint32_t(px[1]) << 16;
+            color |= uint32_t(px[2]) << 8;
+            color |= uint32_t(px[3]);
 
             image[y * width + x] = color;
         }
