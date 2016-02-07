@@ -4,9 +4,13 @@
 #include <png.h>
 
 
+static uint32_t* alloc_image(int width, int height)
+{
+    return new uint32_t[width * height];
+}
 
-int png_read(const std::string& filename, long& width,
-             long& height, char& bit_depth, uint32_t* image)
+uint32_t* png_read(const std::string& filename, int& width,
+                   int& height, char& bit_depth, int& error)
 {
     png_bytep *row_pointers;
     png_byte color_type;
@@ -14,25 +18,29 @@ int png_read(const std::string& filename, long& width,
     FILE *fp = fopen(filename.c_str(), "rb");
     if (!fp)
     {
-        return (-1);
+        error = -1;
+        return (NULL);
     }
 
     png_structp png = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
 
     if(!png)
     {
-        return (-2);
+        error = -2;
+        return (NULL);
     }
 
     png_infop info = png_create_info_struct(png);
     if(!info)
     {
-        return (-3);
+        error = -3;
+        return (NULL);
     }
 
     if(setjmp(png_jmpbuf(png)))
     {
-        return (-4);
+        error = -4;
+        return (NULL);
     }
 
     png_init_io(png, fp);
@@ -87,18 +95,28 @@ int png_read(const std::string& filename, long& width,
 
     png_read_image(png, row_pointers);
 
-    image = new uint32_t[height * width];
-    for(int y = 0; y < height; ++y)
+    uint32_t* image = alloc_image(width, height);
+    for(int y = 0; y < height; y++)
     {
-        for(int x = 0; x < width; ++x)
+        png_bytep row = row_pointers[y];
+        for(int x = 0; x < width; x++)
         {
-            image[y * width + x] = uint32_t(row_pointers[y][x * sizeof(uint32_t)]);
+            png_bytep px = &(row[x * 4]);
+            uint32_t color = 0;
+            color |= uint32_t(px[0]) << 24;
+            color |= uint32_t(px[0]) << 16;
+            color |= uint32_t(px[0]) << 8;
+            color |= uint32_t(px[0]);
+
+            image[y * width + x] = color;
         }
     }
 
     png_destroy_read_struct(&png, &info, NULL);
     fclose(fp);
-    return (0);
+
+    error = 0;
+    return image;
 }
 
 
@@ -173,13 +191,13 @@ std::string err_str(int err)
 {
     switch(err)
     {
-    case 1:
+    case -1:
         return "Fail to open file";
-    case 2:
+    case -2:
         return "Fail to create png struct";
-    case 3:
+    case -3:
         return "Fail to create info struct";
-    case 4:
+    case -4:
         return "Fail IO operation";
     default:
         return "Uknown error";

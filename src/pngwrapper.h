@@ -5,8 +5,8 @@
 #include <cstdint>
 
 
-int png_read(const std::string& filename, long& width,
-             long& height, char& bit_depth, uint32_t* image);
+uint32_t* png_read(const std::string& filename, int& width,
+                   int& height, char& bit_depth, int& error);
 
 int png_write(const std::string& filename, long width,
               long height, uint32_t* image);
