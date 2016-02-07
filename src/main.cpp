@@ -1,5 +1,6 @@
 #include "slog/slog.h"
 #include "pngwrapper.h"
+#include "sdl.h"
 
 
 // void process_png_file()
@@ -19,31 +20,52 @@
 
 int main(int argc, char *argv[])
 {
-    if (argc < 2)
-    {
-        SLOG("Usage: phi <image_path>");
-        exit(1);
-    }
+//     if (argc < 2)
+//     {
+//         SLOG("Usage: phi <image_path>");
+//         return (1);
+//     }
 
-    std::string filename = argv[1];
-    uint32_t* image = NULL;
-    long width = 0;
-    long height = 0;
-    char bit_depth = 0;        
-    int ret = png_read(filename, width, height, bit_depth, image);
+    std::string filename = "images/android.png";
+
+    int width = 0;
+    int height = 0;
+    char bit_depth = 0;
+    int ret = 0;
+    uint32_t* image = png_read(filename, width, height, bit_depth, ret);
     if (ret)
     {
         std::string error = err_str(ret);
         SLOG("%s", error.c_str());
+        return (1);
     }
 
-    SLOG("Open image %s (width: %ld) (height: %ld)", filename.c_str(), width, height);
+    SLOG("Open image %s (width: %d) (height: %d) (ret: %d)", filename.c_str(), width, height, ret);
+
+    int size = width * height;
+// 
+//     for (int i = 0; i < height; ++i)
+//     {
+//         for (int j = 0; j < width; ++j)
+//             printf("%d", image[i * width + j]);
+//     }
+//     return (5);
+
+    if (!initGraphics(width, height))
+    {
+        SLOG("Fail to init sdl");
+        return (2);
+    }
+
+    displayVFB(image, width, height);
+    waitForUserExit();
+    closeGraphics();
 
 //     if(argc != 3) abort();
 
 //     read_png_file(argv[1]);
 //     process_png_file();
 //     write_png_file(argv[2]);
- 
+
     return 0;
 }
