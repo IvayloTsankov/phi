@@ -24,7 +24,7 @@ uint32_t to_rgb(uint8_t red, uint8_t green, uint8_t blue)
 
 void BlackAndWhite(Image* image, SDLKey key, uint8_t type)
 {
-    SLOG("Execute BlakcAndWhite");
+    SLOG_DEBUG("Execute BlakcAndWhite");
 
     int height = image->height;
     int width = image->width;
@@ -48,25 +48,62 @@ void BlackAndWhite(Image* image, SDLKey key, uint8_t type)
 
 void BrightnessBoost(Image* image, SDLKey key, uint8_t type)
 {
-    SLOG("Execute BrightnessBoost");
+    SLOG_DEBUG("Execute BrightnessBoost");
+    if (key != SDLK_LEFT && key != SDLK_RIGHT)
+    {
+        SLOG_DEBUG("Invalid effect option: %d", key);
+        return;
+    }
+
+    if (key == SDLK_LEFT)
+    {
+        SLOG_DEBUG("Brightness down");
+    }
+
+    if (key == SDLK_RIGHT)
+    {
+        SLOG_DEBUG("Brightness up");
+    }
 
     int height = image->height;
     int width = image->width;
     uint32_t* image_buffer = image->buffer;
-    for(int y = 0; y < height; ++y)
+    if (key == SDLK_LEFT)
     {
-        for(int x = 0; x < width; ++x)
+        for(int y = 0; y < height; ++y)
         {
-            register uint32_t color = image_buffer[y * width + x];
-            uint8_t r, g, b;
-            split_rgb(color, r, g, b);
+            for(int x = 0; x < width; ++x)
+            {
+                register uint32_t color = image_buffer[y * width + x];
+                uint8_t r, g, b;
+                split_rgb(color, r, g, b);
 
-            r /= 3;
-            g /= 3;
-            b /= 3;
+                r = r < 10 ? 0 : r - 10;
+                g = g < 10 ? 0 : g - 10;
+                b = b < 10 ? 0 : b - 10;
 
-            color = to_rgb(r, g, b);
-            image_buffer[y * width + x] = color;
+                color = to_rgb(r, g, b);
+                image_buffer[y * width + x] = color;
+            }
+        }
+    }
+    else
+    {
+        for(int y = 0; y < height; ++y)
+        {
+            for(int x = 0; x < width; ++x)
+            {
+                register uint32_t color = image_buffer[y * width + x];
+                uint8_t r, g, b;
+                split_rgb(color, r, g, b);
+
+                r = r + 10 > 255 ? 255 : r + 10;
+                g = g + 10 > 255 ? 255 : g + 10;
+                b = b + 10 > 255 ? 255 : b + 10;
+
+                color = to_rgb(r, g, b);
+                image_buffer[y * width + x] = color;
+            }
         }
     }
 }
