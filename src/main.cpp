@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
     display_vfb(image->buffer, image->width, image->height);
     InputHandler handler(std::move(image));
     handler.Bind(SDLK_1, BlackAndWhite);
-    handler.Bind(SDLK_2, BrightnessBoost);
+    handler.Bind(SDLK_2, BrightnessChange);
 
     user_input = new UserInput();
     user_input->AddHandler(&handler);

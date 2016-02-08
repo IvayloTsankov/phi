@@ -46,7 +46,7 @@ void BlackAndWhite(Image* image, SDLKey key, uint8_t type)
     return;
 }
 
-void BrightnessBoost(Image* image, SDLKey key, uint8_t type)
+void BrightnessChange(Image* image, SDLKey key, uint8_t type)
 {
     SLOG_DEBUG("Execute BrightnessBoost");
     if (key != SDLK_LEFT && key != SDLK_RIGHT)
