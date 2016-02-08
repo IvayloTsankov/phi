@@ -17,7 +17,7 @@ endif
 
 #  # List of sources:
 SOURCES = src/main.cpp src/pngwrapper.cpp src/sdl.cpp src/utils.cpp src/image.cpp \
-			src/effects.cpp src/userinput.cpp
+			src/effects.cpp src/userinput.cpp src/inputhandler.cpp
 
 OBJECTS = $(SOURCES:.cpp=.o)
 
