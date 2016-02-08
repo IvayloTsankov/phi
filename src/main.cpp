@@ -48,14 +48,17 @@ UserInput* user_input;
 
 int main(int argc, char *argv[])
 {
-//     if (argc < 2)
-//     {
-//         SLOG("Usage: phi <image_path>");
-//         return (1);
-//     }
-// 
-    std::string filename = "images/android.png";
-//     std::string filename = argv[1];
+    if (argc < 2)
+    {
+        SLOG("Usage: phi <image_path>");
+        return (1);
+    }
+
+    std::string filename = argv[1];
+
+    // DEBUG
+    //std::string filename = "images/android.png";
+
     std::unique_ptr<Image>image(open_image(filename, IMAGE_TYPE::PNG));
     if (!image)
     {
