@@ -128,7 +128,7 @@ uint32_t* png_read(const std::string& filename, int& width,
 
     png_read_image(png, row_pointers);
 
-    uint32_t* image = alloc_image(width, height);
+    uint32_t* image = alloc_image_buffer(width, height);
     for(int y = 0; y < height; y++)
     {
         png_bytep row = row_pointers[y];
