@@ -1,5 +1,6 @@
 #include "image.h"
 #include "pngwrapper.h"
+#include "utils.h"
 #include <cstring>
 
 
@@ -52,4 +53,10 @@ int write_image(const std::string& filename, const Image* image)
     default:
         return (10);
     }
+}
+
+void free_image(Image* image)
+{
+    free_image_buffer(image->buffer);
+    delete image;
 }

@@ -22,6 +22,7 @@ struct Image
 
 Image* open_image(const std::string& filename, IMAGE_TYPE type);
 int write_image(const std::string& filename, const Image* image);
+void free_image(Image* image);
 
 
 #endif // PHI_IMAGE_H_
