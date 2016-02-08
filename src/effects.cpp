@@ -22,7 +22,7 @@ uint32_t to_rgb(uint8_t red, uint8_t green, uint8_t blue)
 }
 
 
-void BlackAndWhite(Image* image)
+void BlackAndWhite(Image* image, SDLKey key, uint8_t type)
 {
     SLOG("Execute BlakcAndWhite");
 
@@ -46,7 +46,7 @@ void BlackAndWhite(Image* image)
     return;
 }
 
-void BrightnessBoost(Image* image)
+void BrightnessBoost(Image* image, SDLKey key, uint8_t type)
 {
     SLOG("Execute BrightnessBoost");
 
