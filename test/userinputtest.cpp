@@ -1,5 +1,6 @@
 #include "../src/sdl.h"
 #include "../src/utils.h"
+#include "../src/userinput.h"
 #include "SDL/SDL.h"
 #include "slog/slog.h"
 #include <climits>
@@ -31,8 +32,8 @@ void infinite_poll()
 }
 
 // Return values:
-//      1 - KEY_DOWN
-//      2 - KEY_UP
+//      1 - SDL_KEYDOWN
+//      2 - SDL_KEYUP
 //      3 - other event
 //      4 - no events
 int check_pressed(SDLKey& key)
@@ -112,11 +113,34 @@ void test_user_input()
     }
 }
 
+UserInput input;
+
+class Handle: public KeyHandler
+{
+public:
+    void OnMessage(SDLKey key, uint8_t type)
+    {
+        SLOG("Key pressed: %d, event type: %d", key, (int)type);
+        if (type == SDL_KEYUP)
+        {
+            input.Stop();
+        }
+    }
+};
 
 int main()
 {
     init_graphics(640, 480);
-    test_user_input();
+
+    Handle h;
+    h.RegisterKey(SDLK_UP);
+    h.RegisterKey(SDLK_DOWN);
+    h.RegisterKey(SDLK_LEFT);
+    h.RegisterKey(SDLK_RIGHT);
+
+    input.AddHandler(&h);
+    input.Start();
+
     close_graphics();
     return (0);
 }
