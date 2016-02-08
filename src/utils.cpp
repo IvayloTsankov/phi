@@ -1,5 +1,10 @@
 #include "utils.h"
 
+#if defined (_WIN32)
+#   include <WinBase.h>
+#else
+#   include <unistd.h>
+#endif // (_WIN32)
 
 inline uint32_t* alloc_image_buffer(int width, int height)
 {
@@ -24,4 +29,13 @@ uint32_t* scale(uint32_t* src_image, int src_w, int src_h,
     }
 
     return dst_image;
+}
+
+void phi_sleep(uint32_t millisec)
+{
+#if defined (_WIN32)
+    Sleep(millisec);
+#else
+    usleep(millisec * 1000);
+#endif // (_WIN32)
 }
