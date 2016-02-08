@@ -2,6 +2,44 @@
 #include "sdl.h"
 #include "utils.h"
 #include "image.h"
+#include "effects.h"
+#include <SDL/SDL.h>
+
+
+bool handle_user_input(Image* image)
+{
+	SDL_Event ev;
+    while (SDL_WaitEvent(&ev))
+    {
+        SLOG("Event occurs");
+        switch (ev.type)
+        {
+        case SDL_KEYDOWN:
+        {
+            switch (ev.key.keysym.sym) {
+                case SDLK_1:
+                    BlackAndWhite(image);
+                    break;
+                case SDLK_2:
+                    BrightnessBoost(image);
+                    break;
+                case SDLK_ESCAPE:
+                    return false;
+                default:
+                    break;
+            }
+        }
+        case SDL_QUIT:
+            break;
+        default:
+            break;
+        }
+
+        display_vfb(image->buffer, image->width, image->height);
+    }
+
+    return false;
+}
 
 
 int main(int argc, char *argv[])
@@ -25,14 +63,19 @@ int main(int argc, char *argv[])
     SLOG("Open image %s (width: %d) (height: %d)",
          filename.c_str(), image->width, image->height);
 
-    if (!initGraphics(image->width, image->height))
+    if (!init_graphics(image->width, image->height))
     {
         SLOG("Fail to init sdl");
         return (2);
     }
 
-    displayVFB(image->buffer, image->width, image->height);
-    waitForUserExit();
-    closeGraphics();
+    bool start = true;
+    while(start)
+    {
+        start = handle_user_input(image);
+    }
+
+    free_image(image);
+    close_graphics();
     return 0;
 }
