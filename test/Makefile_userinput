@@ -8,6 +8,7 @@ CFLAGS += $(shell pkg-config --cflags sdl)
 CFLAGS += -I../third_party/
 
 LDFLAGS += $(shell pkg-config --libs sdl)
+LDFLAGS += -lpthread
 
 # check for debug
 ifeq ($1, "debug")
@@ -15,7 +16,7 @@ ifeq ($1, "debug")
 endif
 
 #  # List of sources:
-SOURCES = ../src/utils.cpp ../src/sdl.cpp userinputtest.cpp
+SOURCES = ../src/userinput.cpp ../src/utils.cpp ../src/sdl.cpp userinputtest.cpp
 OBJECTS = $(SOURCES:.cpp=.o)
 
 EXECUTABLE = userinputtest
