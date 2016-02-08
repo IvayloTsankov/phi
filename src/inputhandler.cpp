@@ -14,12 +14,14 @@ InputHandler::InputHandler(std::unique_ptr<Image> image)
 {
     this->RegisterKey(SDLK_q);
     this->RegisterKey(SDLK_ESCAPE);
+    this->RegisterKey(SDLK_LEFT);
+    this->RegisterKey(SDLK_RIGHT);
 }
 
 
 void InputHandler::OnMessage(SDLKey key, uint8_t type)
 {
-    SLOG("User input: %d %d", key, type);
+    SLOG_DEBUG("User input: %d %d", key, type);
     if (type == SDL_KEYUP)
     {
         return;
@@ -34,7 +36,7 @@ void InputHandler::OnMessage(SDLKey key, uint8_t type)
     if (key == SDLK_q)
     {
         this->ResetState();
-        SLOG("Leave the effect")
+        SLOG_DEBUG("Leave the effect")
         return;
     }
 
@@ -44,7 +46,7 @@ void InputHandler::OnMessage(SDLKey key, uint8_t type)
         if (effect != this->effects_.end())
         {
             this->curr_effect_ = effect->second;
-            SLOG("Enter the effect")
+            SLOG_DEBUG("Enter the effect")
             return;
         }
     }
@@ -52,11 +54,12 @@ void InputHandler::OnMessage(SDLKey key, uint8_t type)
     {
         if (this->image_.get() == NULL)
         {
-            SLOG("Try to execute effect without image");
+            SLOG_DEBUG("Try to execute effect without image");
             user_input->Stop();
             return;
         }
 
+        SLOG_DEBUG("Apply effect");
         this->curr_effect_(this->image_.get(), key, type);
         display_vfb(this->image_->buffer, this->image_->width, this->image_->height);
     }
