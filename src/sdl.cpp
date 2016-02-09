@@ -1,6 +1,6 @@
+#include "sdl.h"
 #include <SDL/SDL.h>
 #include <stdio.h>
-#include "sdl.h"
 #include "slog/slog.h"
 
 
@@ -70,8 +70,36 @@ int frame_width(void)
 }
 
 /// returns the frame height
-int frame_weight(void)
+int frame_height(void)
 {
 	if (screen) return screen->h;
 	return 0;
+}
+
+void wait_for_exit(void)
+{
+   SDL_Event ev; 
+   while (1)
+   {
+       while (SDL_WaitEvent(&ev))
+       {
+           switch (ev.type)
+           {
+               case SDL_QUIT:
+                   return;
+               case SDL_KEYDOWN:
+               {   
+                   switch (ev.key.keysym.sym)
+                   {
+                       case SDLK_ESCAPE:
+                           return;
+                       default:
+                           break;
+                   }
+               }
+               default:
+                   break;
+           }
+       }
+   }
 }

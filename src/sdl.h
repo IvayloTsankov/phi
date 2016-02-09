@@ -1,13 +1,13 @@
-#ifndef __SDL_H__
-#define __SDL_H__
+#ifndef PHI_SDL_H_
+#define PHI_SDL_H_
 
 #include <cstdint>
 
 bool init_graphics(int frameWidth, int frameHeight);
 void close_graphics(void);
 void display_vfb (uint32_t* vfb, int width, int height);
-bool handle_user_input(void);
+void wait_for_exit(void);
 int frame_width(void);
 int frame_height(void);
 
-#endif // __SDL_H__
+#endif // PHI_SDL_H_
