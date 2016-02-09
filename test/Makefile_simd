@@ -1,0 +1,14 @@
+
+CC=g++
+CFLAGS=-fopenmp
+TARGET=simd
+
+all: ${TARGET}
+
+
+${TARGET}: simd.cpp
+	${CC} ${CFLAGS} simd.cpp -o $@
+
+
+clean:
+	rm ${TARGET}
