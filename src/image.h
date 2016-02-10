@@ -21,6 +21,7 @@ struct Image
 
 
 Image* open_image(const std::string& filename, IMAGE_TYPE type);
+Image* create_image(int width, int height);
 int write_image(const std::string& filename, const Image* image);
 void free_image(Image* image);
 

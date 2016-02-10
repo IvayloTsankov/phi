@@ -1,6 +1,6 @@
 #include "image.h"
-#include "pngwrapper.h"
 #include "utils.h"
+#include "pngwrapper.h"
 #include <cstring>
 
 
@@ -38,6 +38,15 @@ Image* open_image(const std::string& filename, IMAGE_TYPE type)
     return image;
 }
 
+Image* create_image(int width, int height)
+{
+    Image* image = new Image;
+    image->buffer = new uint32_t[width * height];
+    image->width = width;
+    image->height = height;
+
+    return image;
+}
 
 int write_image(const std::string& filename, const Image* image)
 {
@@ -57,6 +66,6 @@ int write_image(const std::string& filename, const Image* image)
 
 void free_image(Image* image)
 {
-    free_image_buffer(image->buffer);
+    delete image->buffer;
     delete image;
 }
