@@ -1,6 +1,7 @@
 #include "sdl.h"
 #include <SDL/SDL.h>
 #include <stdio.h>
+#include "scale.h"
 #include "slog/slog.h"
 
 
@@ -29,24 +30,31 @@ void close_graphics(void)
 }
 
 /// displays a VFB (virtual frame buffer) to the real framebuffer, with the necessary color clipping
-void display_vfb(uint32_t* vfb, int width, int height)
+void display_vfb(uint32_t* image, int width, int height)
 {
+    uint32_t* vfb = image;
+    int vfb_w = width;
+    int vfb_h = height;
+    bool scaled = false;
+    if (width > screen->w || height > screen->h)
+    {
+        vfb = scale(image, width, height, screen->w, screen->h);
+        vfb_w = screen->w;
+        vfb_h = screen->h;
+        scaled = true;
+    }
+
 	int rs = screen->format->Rshift;
 	int gs = screen->format->Gshift;
 	int bs = screen->format->Bshift;
 
-    if (width > screen->w || height > screen->h)
-    {
-        return;
-    }
-
-	for (int y = 0; y < screen->h; ++y)
+	for (int y = 0; y < vfb_h; ++y)
     {
 		Uint32 *row = (Uint32*) ((Uint8*) screen->pixels + y * screen->pitch);
 
-		for (int x = 0; x < screen->w; x++)
+		for (int x = 0; x < vfb_w; x++)
         {
-            uint32_t color = vfb[y * width + x];
+            uint32_t color = vfb[y * vfb_w + x];
             uint8_t red = uint8_t(color >> 24);
             uint8_t green = uint8_t(color >> 16);;
             uint8_t blue = uint8_t(color >> 8);
@@ -58,6 +66,35 @@ void display_vfb(uint32_t* vfb, int width, int height)
 			row[x] = sdl_color;
         }
 	}
+
+    if (vfb_w < screen->w)
+    {
+        for (int y = 0; y < vfb_h; ++y)
+        {
+            Uint32 *row = (Uint32*) ((Uint8*) screen->pixels + y * screen->pitch);
+            for (int x = vfb_w; x < screen->w; x++)
+            {
+                row[x] = 0;
+            }
+        }
+    }
+
+    if (vfb_h < screen->h)
+    {
+        for (int y = vfb_h; y < screen->h; ++y)
+        {
+            Uint32 *row = (Uint32*) ((Uint8*) screen->pixels + y * screen->pitch);
+            for (int x = 0; x <  screen->w; x++)
+            {
+                row[x] = 0;
+            }
+        }
+    }
+
+    if (scaled)
+    {
+        delete vfb;
+    }
 
 	SDL_Flip(screen);
 }
