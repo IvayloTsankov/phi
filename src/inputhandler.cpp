@@ -61,7 +61,6 @@ void InputHandler::OnMessage(SDLKey key, uint8_t type)
 
         SLOG_DEBUG("Apply effect");
         this->curr_effect_(this->image_.get(), key, type);
-        display_vfb(this->image_->buffer, this->image_->width, this->image_->height);
     }
 }
 
