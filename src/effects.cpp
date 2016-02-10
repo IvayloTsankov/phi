@@ -1,5 +1,9 @@
 #include "effects.h"
+#include "sdl.h"
 #include "slog/slog.h"
+#include "scale.h"
+#include <cmath>
+#include <memory>
 
 
 void split_rgb(uint32_t rgbcolor,
@@ -43,6 +47,7 @@ void BlackAndWhite(Image* image, SDLKey key, uint8_t type)
         }
     }
 
+    display_vfb(image->buffer, image->width, image->height);
     return;
 }
 
@@ -106,4 +111,41 @@ void BrightnessChange(Image* image, SDLKey key, uint8_t type)
             }
         }
     }
+
+    display_vfb(image->buffer, image->width, image->height);
+    return;
 }
+
+
+void ScaleDown(Image* image, SDLKey key, uint8_t type)
+{
+    if (key != SDLK_LEFT && key != SDLK_RIGHT)
+    {
+        SLOG_DEBUG("Invalid option for scaling");
+        return;
+    }
+
+    static int new_width = image->width;
+    static int new_height = image->height;
+    if (key == SDLK_LEFT)
+    {
+        new_width /= 2;
+        new_height /= 2;
+    }
+
+    if (key == SDLK_RIGHT)
+    {
+        new_width *= 2;
+        new_height *= 2;
+    }
+
+    SLOG_DEBUG("(w: %d, h: %d) (nw: %d, nh: %d)",
+               image->width, image->height,
+               new_width, new_height);
+
+    uint32_t* new_img = scale(image->buffer, image->width, image->height, new_width, new_height);
+    display_vfb(new_img, new_width, new_height);
+    delete new_img;
+}
+
+
