@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
     SLOG("Open image %s (width: %d) (height: %d)",
          filename.c_str(), image->width, image->height);
 
-    if (!init_graphics(image->width, image->height))
+    if (!init_graphics(800, 600))
     {
         SLOG("Fail to init sdl");
         return (2);
@@ -79,11 +79,11 @@ int main(int argc, char *argv[])
     InputHandler handler(std::move(image));
     handler.Bind(SDLK_1, BlackAndWhite);
     handler.Bind(SDLK_2, BrightnessChange);
+    handler.Bind(SDLK_3, ScaleDown);
 
     user_input = new UserInput();
     user_input->AddHandler(&handler);
     user_input->Start();
-
     close_graphics();
     return 0;
 }
