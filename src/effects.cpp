@@ -7,7 +7,7 @@
 #include <memory>
 
 
-void BlackAndWhite(Image* image, SDLKey key, uint8_t type)
+void GrayScale(Image* image, SDLKey key, uint8_t type)
 {
     SLOG_DEBUG("Execute BlakcAndWhite");
 
@@ -136,9 +136,9 @@ void FloydSteinbergDithering(Image* image, SDLKey key, uint8_t type)
     int w = image->width;
     int h = image->height;
     uint32_t* buffer = image->buffer;
+    int prop_error = 0;
     for(int y = 0; y < h; ++y)
     {
-        int error = 0;
         for(int x = 0; x < w; ++ x)
         {
             int pixel_i = (y * w) + x;
@@ -150,33 +150,47 @@ void FloydSteinbergDithering(Image* image, SDLKey key, uint8_t type)
             uint32_t color = buffer[pixel_i];
             uint8_t r, g, b;
             split_rgb(color, r, g, b);
-            int delta_l = g - r;
-            int delta_r = g - b;
-            
-            if (delta_l <= delta_r)
-            {
-                error += delta_l;
-                color = 0x00000000;
-            }
-            else
-            {
-                error += delta_r;
-                color = 0xFFFFFF00;
-            }
-            
-            buffer[pixel_i] = color;
+            uint32_t gray = (r + g + b) / 3;
+            uint32_t new_color = gray > 128 ? 0xFFFFFF00: 0x00000000;
+            buffer[pixel_i] = new_color;
 
-            // distribute error
-            int error_fraction = error / 16;
-
+            prop_error += gray - new_color;
+            prop_error = prop_error / 255 > 1 ? 255 : prop_error;
             if (x < w)
-                buffer[right] += error_fraction;
+            {    
+                uint8_t* np = (uint8_t*)(buffer + right);
+                int prop_coef = 0.4375 * prop_error;
+                *(np++) += prop_coef;
+                *(np++) += prop_coef;
+                *(np++) += prop_coef;
+            }
+
             if (y + 1 < h)
-                buffer[down] += error_fraction;
+            {
+                uint8_t* np = (uint8_t*)(buffer + down);
+                int prop_coef = 0.3125 * prop_error;
+                *(np++) += prop_coef;
+                *(np++) += prop_coef;
+                *(np++) += prop_coef;
+            }
+
             if (y + 1 < h && x + 1 < w)
-                buffer[rdown] += error_fraction;
+            {
+                uint8_t* np = (uint8_t*)(buffer + rdown);
+                int prop_coef = 0.0625 * prop_error;
+                *(np++) += prop_coef;
+                *(np++) += prop_coef;
+                *(np++) += prop_coef;
+            }
+
             if (y + 1 < h && x - 1 > 0)
-                buffer[ldown] += error_fraction;
+            {
+                uint8_t* np = (uint8_t*)(buffer + ldown);
+                int prop_coef = 0.1875 * prop_error;
+                *(np++) += prop_coef;
+                *(np++) += prop_coef;
+                *(np++) += prop_coef;
+            }
         }
     }
 
