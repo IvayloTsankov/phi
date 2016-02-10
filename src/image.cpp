@@ -1,32 +1,40 @@
 #include "image.h"
 #include "utils.h"
 #include "pngwrapper.h"
+#include "jpegwrapper.h"
 #include <cstring>
 
 
-Image* open_image(const std::string& filename, IMAGE_TYPE type)
+Image* open_image(const std::string& filename)
 {
     Image* image = new Image;
     memset(image, 0, sizeof(Image));
     int error = 0;
     char bit_depth = 0;
 
-    switch(type)
+    std::string ext = get_extension(filename);
+    if (ext.length() == 0)
     {
-    case IMAGE_TYPE::PNG:
+        error = 10;
+    }
+
+    if (ext == "jpg" ||  ext == "jpeg")
+    {
+        image->buffer = jpeg_read(filename, image->width,
+                                  image->height, error);
+    }
+
+    if (ext == "png")
+    {
         image->buffer = png_read(filename, image->width,
                                  image->height, bit_depth, error);
 
         image->type = IMAGE_TYPE::PNG;
-        break;
+    }
 
-    case IMAGE_TYPE::EXR:
+    if (ext == "exr")
+    {
         error = 5;
-        break;
-
-    default:
-        error = 10;
-        break;
     }
 
     if (error)

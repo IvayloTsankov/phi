@@ -6,16 +6,6 @@
 #   include <unistd.h>
 #endif // (_WIN32)
 
-inline uint32_t* alloc_image_buffer(int width, int height)
-{
-    return new uint32_t[width * height];
-}
-
-void free_image_buffer(uint32_t* img_buffer)
-{
-    delete img_buffer;
-}
-
 void phi_sleep(uint32_t millisec)
 {
 #if defined (_WIN32)
@@ -23,4 +13,16 @@ void phi_sleep(uint32_t millisec)
 #else
     usleep(millisec * 1000);
 #endif // (_WIN32)
+}
+
+std::string get_extension(const std::string& filename)
+{
+    size_t ext_pos = filename.rfind(".");
+    std::string extension;
+    if (ext_pos != std::string::npos)
+    {
+        extension = filename.substr(ext_pos + 1, filename.length());
+    }
+
+    return extension;
 }
