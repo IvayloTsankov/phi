@@ -1,7 +1,7 @@
 # Set up basic variables:
 
 CC = g++
-CFLAGS = -c -Wall -DSLOGGING -std=c++11 -g
+CFLAGS = -c -Wall -DSLOGGING -DSLOGGING_DEBUG -std=c++11 -g
 LDFLAGS =
 
 CFLAGS += $(shell pkg-config --cflags libpng sdl)
@@ -17,7 +17,7 @@ endif
 
 #  # List of sources:
 SOURCES = src/main.cpp src/pngwrapper.cpp src/sdl.cpp src/utils.cpp src/image.cpp \
-			src/effects.cpp src/userinput.cpp src/inputhandler.cpp
+			src/effects.cpp src/userinput.cpp src/inputhandler.cpp src/scale.cpp
 
 OBJECTS = $(SOURCES:.cpp=.o)
 
