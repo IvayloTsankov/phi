@@ -59,8 +59,9 @@ void InputHandler::OnMessage(SDLKey key, uint8_t type)
             return;
         }
 
-        SLOG_DEBUG("Apply effect");
+        SLOG_DEBUG("Start effect");
         this->curr_effect_(this->image_.get(), key, type);
+        SLOG_DEBUG("Finish effect");
     }
 }
 
