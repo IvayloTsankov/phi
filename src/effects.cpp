@@ -5,6 +5,7 @@
 #include "utils.h"
 #include <cmath>
 #include <memory>
+#include <omp.h>
 
 
 void GrayScale(Image* image, SDLKey key, uint8_t type)

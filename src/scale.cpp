@@ -1,5 +1,6 @@
 #include "scale.h"
 #include <cmath>
+#include <omp.h>
 
 
 uint32_t* scale(uint32_t* buffer, int& src_w, int& src_h, int dst_w, int dst_h, bool modify)
@@ -10,6 +11,7 @@ uint32_t* scale(uint32_t* buffer, int& src_w, int& src_h, int dst_w, int dst_h, 
     //Image* dst_image = create_image(dst_w, dst_h);
     uint32_t* dst_buffer = new uint32_t[dst_w * dst_h];
 
+    #pragma omp parallel for
     for (int y = 0; y < dst_h; y++)
     {
         for (int x = 0; x < dst_w; x++)

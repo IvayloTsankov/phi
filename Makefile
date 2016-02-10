@@ -1,14 +1,14 @@
 # Set up basic variables:
 
 CC = g++
-CFLAGS = -c -Wall -DSLOGGING -DSLOGGING_DEBUG -std=c++11 -g
+CFLAGS = -c -Wall -DSLOGGING -DSLOGGING_DEBUG -std=c++11
 LDFLAGS =
 
 CFLAGS += $(shell pkg-config --cflags libpng sdl)
 CFLAGS += -Ithird_party/
 
 LDFLAGS += $(shell pkg-config --libs libpng sdl)
-LDFLAGS += -lpthread -ljpeg
+LDFLAGS += -lpthread -ljpeg -fopenmp
 
 # check for debug
 ifeq ($1, "debug")
