@@ -196,3 +196,31 @@ void FloydSteinbergDithering(Image* image, SDLKey key, uint8_t type)
 
     display_vfb(image->buffer, image->width, image->height);
 }
+
+void Sepia(Image* image, SDLKey key, uint8_t)
+{
+    uint32_t* buffer = image->buffer;
+    int width = image->width;
+    int height = image->height;
+    for(int y = 0; y < height; ++y)
+    {
+        for(int x = 0; x < width; ++x)
+        {
+            uint8_t* pixel = (uint8_t*)(buffer + (y * width + x));
+            uint8_t r = *(pixel + 0);
+            uint8_t g = *(pixel + 1);
+            uint8_t b = *(pixel + 2);
+
+            int br = 0.3 * r + 0.59 * g + 0.11 * b;
+//             *(pixel++) = std::min(br * 1.0, 255.0);
+//             *(pixel++) = std::min(br * 0.71 , 255.0);
+//             *(pixel++) = std::min(br * 0.41, 255.0);
+
+            *(pixel++) = std::min(r * 0.343 + g * 0.686 + b * 0.168, 255.0);
+            *(pixel++) = std::min(r * 0.272 + g * 0.534 + b * 0.131, 255.0);
+            *(pixel++) = std::min(r * 0.393 + g * 0.769 + b * 0.189, 255.0);
+        }
+    }
+
+    display_vfb(image->buffer, image->width, image->height);
+}

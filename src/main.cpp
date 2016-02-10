@@ -80,6 +80,7 @@ int main(int argc, char *argv[])
     handler.Bind(SDLK_2, BrightnessChange);
     handler.Bind(SDLK_3, ScaleDown);
     handler.Bind(SDLK_4, FloydSteinbergDithering);
+    handler.Bind(SDLK_5, Sepia);
 
     user_input = new UserInput();
     user_input->AddHandler(&handler);
