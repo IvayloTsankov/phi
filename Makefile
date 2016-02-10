@@ -8,7 +8,7 @@ CFLAGS += $(shell pkg-config --cflags libpng sdl)
 CFLAGS += -Ithird_party/
 
 LDFLAGS += $(shell pkg-config --libs libpng sdl)
-LDFLAGS += -lpthread
+LDFLAGS += -lpthread -ljpeg
 
 # check for debug
 ifeq ($1, "debug")
@@ -17,7 +17,8 @@ endif
 
 #  # List of sources:
 SOURCES = src/main.cpp src/pngwrapper.cpp src/sdl.cpp src/utils.cpp src/image.cpp \
-			src/effects.cpp src/userinput.cpp src/inputhandler.cpp src/scale.cpp
+			src/effects.cpp src/userinput.cpp src/inputhandler.cpp src/scale.cpp \
+			src/jpegwrapper.cpp
 
 OBJECTS = $(SOURCES:.cpp=.o)
 
