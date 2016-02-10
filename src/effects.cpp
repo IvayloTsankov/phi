@@ -19,9 +19,8 @@ void GrayScale(Image* image, SDLKey key, uint8_t type)
         for(int x = 0; x < width; ++x)
         {
             register uint32_t color = image_buffer[y * width + x];
-            uint8_t r, g, b;
-            split_rgb(color, r, g, b);
-            uint32_t gray = r * 0.2126 + g * 0.7152 + b * 0.0722;
+            uint8_t* pixel = (uint8_t*)(image_buffer + (y * width + x));
+            uint32_t gray = *(pixel + 1) * 0.2126 + *(pixel + 2) * 0.7152 + *(pixel + 3) * 0.0722;
 
             gray = gray < 255 ? gray : 255;
             color = to_rgb(gray, gray, gray);
@@ -111,14 +110,23 @@ void ScaleDown(Image* image, SDLKey key, uint8_t type)
     static int new_height = image->height;
     if (key == SDLK_LEFT)
     {
-        new_width /= 2;
-        new_height /= 2;
+        if (new_width > 20)
+            new_width /= 2;
+
+        if (new_height > 20)
+            new_height /= 2;
     }
 
     if (key == SDLK_RIGHT)
     {
         new_width *= 2;
         new_height *= 2;
+
+        if (new_width > image->width)
+            new_width = image->width;
+
+        if (new_height > image->height)
+            new_height = image->height;
     }
 
     SLOG_DEBUG("(w: %d, h: %d) (nw: %d, nh: %d)",
@@ -148,9 +156,8 @@ void FloydSteinbergDithering(Image* image, SDLKey key, uint8_t type)
             int ldown = ((y + 1) * w) + x - 1;
 
             uint32_t color = buffer[pixel_i];
-            uint8_t r, g, b;
-            split_rgb(color, r, g, b);
-            uint32_t gray = (r + g + b) / 3;
+            uint8_t* pixel = (uint8_t*)(buffer + pixel_i);
+            uint32_t gray = (*(pixel) + *(pixel + 1) + *(pixel + 2)) / 3;
             uint32_t new_color = gray > 128 ? 0xFFFFFF00: 0x00000000;
             buffer[pixel_i] = new_color;
 
@@ -202,6 +209,8 @@ void Sepia(Image* image, SDLKey key, uint8_t)
     uint32_t* buffer = image->buffer;
     int width = image->width;
     int height = image->height;
+
+    #pragma omp parallel for
     for(int y = 0; y < height; ++y)
     {
         for(int x = 0; x < width; ++x)
@@ -210,11 +219,6 @@ void Sepia(Image* image, SDLKey key, uint8_t)
             uint8_t r = *(pixel + 0);
             uint8_t g = *(pixel + 1);
             uint8_t b = *(pixel + 2);
-
-            int br = 0.3 * r + 0.59 * g + 0.11 * b;
-//             *(pixel++) = std::min(br * 1.0, 255.0);
-//             *(pixel++) = std::min(br * 0.71 , 255.0);
-//             *(pixel++) = std::min(br * 0.41, 255.0);
 
             *(pixel++) = std::min(r * 0.343 + g * 0.686 + b * 0.168, 255.0);
             *(pixel++) = std::min(r * 0.272 + g * 0.534 + b * 0.131, 255.0);
