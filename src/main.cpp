@@ -57,9 +57,8 @@ int main(int argc, char *argv[])
     std::string filename = argv[1];
 
     // DEBUG
-    //std::string filename = "images/android.png";
-
-    std::unique_ptr<Image>image(open_image(filename, IMAGE_TYPE::PNG));
+    //std::string filename = "images/cube.jpg";
+    std::unique_ptr<Image>image(open_image(filename));
     if (!image)
     {
         SLOG("Fail to open: %s", filename.c_str());
@@ -80,6 +79,7 @@ int main(int argc, char *argv[])
     handler.Bind(SDLK_1, BlackAndWhite);
     handler.Bind(SDLK_2, BrightnessChange);
     handler.Bind(SDLK_3, ScaleDown);
+    handler.Bind(SDLK_4, FloydSteinbergDithering);
 
     user_input = new UserInput();
     user_input->AddHandler(&handler);
