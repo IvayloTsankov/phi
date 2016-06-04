@@ -6,6 +6,7 @@
 #include <cmath>
 #include <memory>
 #include <omp.h>
+#include <emmintrin.h>
 
 
 void GrayScale(Image* image, SDLKey key, uint8_t type)
@@ -54,9 +55,25 @@ void BrightnessChange(Image* image, SDLKey key, uint8_t type)
 
     int height = image->height;
     int width = image->width;
+    int size = width * height;
     uint32_t* image_buffer = image->buffer;
     if (key == SDLK_LEFT)
     {
+//         for(int i = 0; i < size; i += 16)
+//         {
+//             uint8_t* ptr = (uint8_t*)image_buffer + i;
+//             __m128i vect = _mm_set_epi8(*(ptr++), *(ptr++), *(ptr++), *(ptr++),
+//                                         *(ptr++), *(ptr++), *(ptr++), *(ptr++),
+//                                         *(ptr++), *(ptr++), *(ptr++), *(ptr++),
+//                                         *(ptr++), *(ptr++), *(ptr++), *(ptr++));
+// 
+//             __m128i scale = _mm_set_epi8(10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
+//                                          10, 10, 10, 10, 10, 10);
+//             __m128i result = _mm_add_epi8(vect, scale);
+// //             *(image_buffer + i) = 5;
+//             _mm_store_si128((__m128i*)(((uint8_t*)image_buffer) + i), result);
+//         }
+
         for(int y = 0; y < height; ++y)
         {
             for(int x = 0; x < width; ++x)
