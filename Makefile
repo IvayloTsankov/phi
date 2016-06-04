@@ -1,14 +1,14 @@
 # Set up basic variables:
 
 CC = g++
-CFLAGS = -c -Wall -DSLOGGING -DSLOGGING_DEBUG -std=c++11
+CFLAGS = -O3 -fopenmp -ftree-vectorize -c -Wall -DSLOGGING -DSLOGGING_DEBUG -std=c++11 -msse2
 LDFLAGS =
 
 CFLAGS += $(shell pkg-config --cflags libpng sdl)
 CFLAGS += -Ithird_party/
 
 LDFLAGS += $(shell pkg-config --libs libpng sdl)
-LDFLAGS += -lpthread -ljpeg -fopenmp
+LDFLAGS += -lpthread -ljpeg -fopenmp -msse2
 
 # check for debug
 ifeq ($1, "debug")
