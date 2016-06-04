@@ -1,0 +1,19 @@
+OpenCL Device - GPU
+Compute Unit - Streaming Multiprocessor (SM)
+Processing Element - Scalar Processor (SP)
+
+WorkingGroupId - Id of cluster of kernels
+WorkItemId - Id of a kernel
+
+
+Global memory - all kernels have access to it
+
+Constant memory - reference to main device's memory or
+                  constant cache of Compute Unit if there is one.
+
+Local memory - all kernels within Compute Unite have access to it.
+               also called SHARED MEMORY
+
+Private memory - a working item registers.
+
+
