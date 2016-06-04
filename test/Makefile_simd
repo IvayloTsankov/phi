@@ -1,6 +1,6 @@
 
 CC=g++
-CFLAGS=-fopenmp
+CFLAGS=-fopenmp -msse2
 TARGET=simd
 
 all: ${TARGET}

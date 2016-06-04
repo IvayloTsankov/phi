@@ -2,30 +2,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <cmath>
+#include <emmintrin.h>
 
 #define THREAD_NUM 4
 #define N 1000000
 
 int main()
 {
-    int i = 0;
-    int buff[N];
+    int buff[4];
 
-    omp_set_num_threads(THREAD_NUM);
+    int* ptr = buff;
+    __m128i x = _mm_set_epi32(1, 2, 3, 4);
+    __m128i y = _mm_set_epi32(*ptr++, *ptr++, *ptr++, *ptr++);
 
-    // init data
-    for(int i = 0; i < N; ++i)
-    {
-        buff[i] = i;
-    }
+    __m128i r = _mm_add_epi32(x, y);
+    _mm_storeu_si32((__m128i*)buff, r);
 
-    //#pragma omp parallel for
-    for(int i = 0; i < N; ++i)
-    {
-        buff[i] = buff[i] + pow(sin(i), cos(i));
-        buff[i] /= 2;
-        buff[i] *= tan(buff[i]);
-    }
-
+    printf("%d %d %d %d\n", buff[0], buff[1], buff[2], buff[3]);
     return (0);
 }
